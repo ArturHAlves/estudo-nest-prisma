@@ -7,20 +7,19 @@ import { UpdateCarDto } from './dto/update-store.dto';
 export class CarsController {
   constructor(private readonly carsService: CarsService) {}
 
-  @Post(':userId')
-  create(@Param('userId') userId: string, @Body() createCarDto: CreateCarDto) {
-    return this.carsService.create(Number(userId), createCarDto);
+  @Post('user/:id')
+  create(@Param('id', ParseIntPipe) id: number, @Body() createCarDto: CreateCarDto) {
+    return this.carsService.create(id, createCarDto);
   }
 
   @Patch('parking-status')
   updateParkingStatus(@Body() body: { estacionado: boolean }) {
-    console.log('TESTE')
     return this.carsService.updateParkingStatus(body.estacionado);
   }
 
   @Patch(':id')
   update(@Param('id', ParseIntPipe) id: number, @Body() updateCarDto: UpdateCarDto) {
-    return this.carsService.update(Number(id), updateCarDto);
+    return this.carsService.update(id, updateCarDto);
   }
 
   @Get()
@@ -29,12 +28,12 @@ export class CarsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.carsService.findOne(Number(id));
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.carsService.findOne(id);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.carsService.remove(Number(id));
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.carsService.remove(id);
   }
 }
