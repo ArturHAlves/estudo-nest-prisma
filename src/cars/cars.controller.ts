@@ -1,8 +1,10 @@
-import { Controller, Get, Post, Body, Param, Patch, Delete, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch, Delete, ParseIntPipe, UseInterceptors } from '@nestjs/common';
 import { CarsService } from './cars.service';
 import { CreateCarDto } from './dto/create-store.dto';
 import { UpdateCarDto } from './dto/update-store.dto';
+import { ResponseInterceptor } from 'src/common/interceptors/response-interceptor';
 
+@UseInterceptors(ResponseInterceptor)
 @Controller('cars')
 export class CarsController {
   constructor(private readonly carsService: CarsService) {}

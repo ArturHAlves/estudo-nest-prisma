@@ -4,7 +4,6 @@ import { CreateCarDto } from './dto/create-store.dto';
 import { UpdateCarDto } from './dto/update-store.dto';
 import { ResponseFormat } from 'src/common/types/response-format-type';
 import { Car } from '@prisma/client';
-
 @Injectable()
 export class CarsService {
   constructor(private prisma: PrismaService) { }
@@ -27,13 +26,8 @@ export class CarsService {
     }
   }
 
-  async findAll(): Promise<ResponseFormat<Car[]>> {
-    const dados = await this.prisma.car.findMany();
-
-    return {
-      dados,
-      mensagem: "Psiuu! Acabamos de retornar os registros para você! ;)"
-    }
+  findAll() {
+    return this.prisma.car.findMany();
   }
 
   async findOne(id: number) {
