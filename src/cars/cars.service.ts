@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { CreateCarDto } from './dto/create-store.dto';
 import { UpdateCarDto } from './dto/update-store.dto';
@@ -24,10 +24,16 @@ export class CarsService {
     return this.prisma.car.findMany();
   }
 
-  findOne(id: number) {
-    return this.prisma.car.findUnique({ where: { id } });
+  async findOne(id: number) {
+    const car = await this.prisma.car.findUnique({ where: { id } });
+  
+    if (!car) {
+      throw new NotFoundException('Carro não encontrado');      
+    }
+  
+    return car;
   }
-
+  
   remove(id: number) {
     return this.prisma.car.delete({ where: { id } });
   }
@@ -37,6 +43,4 @@ export class CarsService {
       data: { estacionado },
     });
   }
-  
-
 }
