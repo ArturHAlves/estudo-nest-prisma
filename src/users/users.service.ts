@@ -1,19 +1,26 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { User } from '@prisma/client';
+import { User, Car } from '@prisma/client';
 import { CreateUserDto } from './dto/create-store.dto';
 import { UpdateUserDto } from './dto/update-store.dto';
+import { ResponseFormat } from 'src/common/types/response-format-type';
 
 @Injectable()
 export class UsersService {
   constructor(private prisma: PrismaService) { }
 
-  findAll() {
-    return this.prisma.user.findMany({
+  async findAll(): Promise<ResponseFormat<(User & { cars: Car[] })[]>> {
+    const dados = await this.prisma.user.findMany({
       include: {
         cars: true,
       }
     })
+
+    return {
+      dados,
+      mensagem: "Psiuu! Acabamos de retornar os registros para você! ;)"
+    }
+
   }
 
   async findOne(id: number): Promise<User | null> {
@@ -26,7 +33,7 @@ export class UsersService {
     return user;
   }
 
-  async create(CreateUserDto: CreateUserDto) {
+  async create(CreateUserDto: CreateUserDto): Promise<ResponseFormat<User>> {
     const dados = await this.prisma.user.create({ data: { ...CreateUserDto } });
 
     return {
@@ -35,7 +42,7 @@ export class UsersService {
     }
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<ResponseFormat<User>> {
     const dados = await this.prisma.user.update({ where: { id }, data: { ...updateUserDto } });
 
     return {
@@ -45,8 +52,11 @@ export class UsersService {
 
   }
 
-  async delete(id: number) {
+  async delete(id: number): Promise<ResponseFormat<boolean>> {
     await this.prisma.user.delete({ where: { id } });
-    return { message: 'Registro removido com sucesso' }
+    return {
+      dados: true,
+      mensagem: "Tudo certo! Registro removido com sucesso!"
+    }
   }
 }
