@@ -26,15 +26,27 @@ export class UsersService {
     return user;
   }
 
-  create(CreateUserDto: CreateUserDto): Promise<User> {
-    return this.prisma.user.create({ data: CreateUserDto });
+  async create(CreateUserDto: CreateUserDto) {
+    const dados = await this.prisma.user.create({ data: { ...CreateUserDto } });
+
+    return {
+      dados,
+      mensagem: 'Tudo certo! Registro criado com sucesso!'
+    }
   }
 
-  update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
-    return this.prisma.user.update({ where: { id }, data: updateUserDto });
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    const dados = await this.prisma.user.update({ where: { id }, data: { ...updateUserDto } });
+
+    return {
+      dados,
+      mensagem: "Tudo certo! Registro alterado com sucesso!"
+    }
+
   }
 
-  delete(id: number) {
-    return this.prisma.user.delete({ where: { id } });
+  async delete(id: number) {
+    await this.prisma.user.delete({ where: { id } });
+    return { message: 'Registro removido com sucesso' }
   }
 }

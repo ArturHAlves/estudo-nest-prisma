@@ -7,9 +7,9 @@ import { UpdateCarDto } from './dto/update-store.dto';
 export class CarsController {
   constructor(private readonly carsService: CarsService) {}
 
-  @Post('user/:id')
-  create(@Param('id', ParseIntPipe) id: number, @Body() createCarDto: CreateCarDto) {
-    return this.carsService.create(id, createCarDto);
+  @Post()
+  create(@Body() createCarDto: CreateCarDto) {
+    return this.carsService.create(createCarDto);
   }
 
   @Patch('parking-status')
