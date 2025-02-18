@@ -1,4 +1,4 @@
-import { IsString, IsBoolean } from 'class-validator';
+import { IsString, IsBoolean, IsNumber } from 'class-validator';
 
 export class CreateCarDto {
   @IsString()
@@ -6,4 +6,7 @@ export class CreateCarDto {
 
   @IsBoolean()
   estacionado: boolean;
+
+  @IsNumber()
+  userId: number
 }
