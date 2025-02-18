@@ -2,17 +2,15 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { CreateCarDto } from './dto/create-store.dto';
 import { UpdateCarDto } from './dto/update-store.dto';
+import { ResponseFormat } from 'src/common/types/response-format-type';
+import { Car } from '@prisma/client';
 
 @Injectable()
 export class CarsService {
   constructor(private prisma: PrismaService) { }
 
-  async create(createCarDto: CreateCarDto) {
-    const dados = await this.prisma.car.create({
-      data: {
-        ...createCarDto,
-      },
-    });
+  async create(createCarDto: CreateCarDto): Promise<ResponseFormat<Car>> {
+    const dados = await this.prisma.car.create({ data: { ...createCarDto } });
 
     return {
       dados,
@@ -20,7 +18,7 @@ export class CarsService {
     }
   }
 
-  async update(id: number, { estacionado }: UpdateCarDto) {
+  async update(id: number, { estacionado }: UpdateCarDto): Promise<ResponseFormat<Car>> {
     const dados = await this.prisma.car.update({ where: { id }, data: { estacionado } });
 
     return {
@@ -29,8 +27,13 @@ export class CarsService {
     }
   }
 
-  findAll() {
-    return this.prisma.car.findMany();
+  async findAll(): Promise<ResponseFormat<Car[]>> {
+    const dados = await this.prisma.car.findMany();
+
+    return {
+      dados,
+      mensagem: "Psiuu! Acabamos de retornar os registros para você! ;)"
+    }
   }
 
   async findOne(id: number) {
@@ -43,9 +46,12 @@ export class CarsService {
     return car;
   }
 
-  async remove(id: number) {
+  async remove(id: number): Promise<ResponseFormat<boolean>> {
     await this.prisma.car.delete({ where: { id } });
-    return { message: 'Registro removido com sucesso' }
+    return {
+      dados: true, 
+      mensagem: 'Registro removido com sucesso' 
+    }
   }
 
   async updateParkingStatus(estacionado: boolean) {
